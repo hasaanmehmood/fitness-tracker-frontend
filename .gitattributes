@@ -1,0 +1,6 @@
+*.js linguist-language=JavaScript
+*.jsx linguist-language=JavaScript
+src/components/* linguist-detectable=true
+*.css linguist-detectable=false
+*.html linguist-detectable=false
+node_modules/* linguist-vendored
