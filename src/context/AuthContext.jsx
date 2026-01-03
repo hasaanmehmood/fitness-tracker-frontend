@@ -18,7 +18,11 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        checkAuth();
+        if (window.location.pathname !== '/login') {
+            checkAuth();
+        } else {
+            setLoading(false);
+        }
     }, []);
 
     const checkAuth = () => {
@@ -59,8 +63,8 @@ export const AuthProvider = ({ children }) => {
             return response.data;
         } catch (error) {
             const message = error.response?.data?.message || 'Login failed';
-            toast.error(message);
-            throw error;
+            throw new Error(message);
+
         }
     };
 

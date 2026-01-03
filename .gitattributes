@@ -4,3 +4,6 @@ src/components/* linguist-detectable=true
 *.css linguist-detectable=false
 *.html linguist-detectable=false
 node_modules/* linguist-vendored
+dist/* linguist-vendored=false
+docs/* linguist-documentation=false
+src/** linguist-detectable=true

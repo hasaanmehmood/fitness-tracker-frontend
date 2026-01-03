@@ -15,7 +15,13 @@ import {
 } from '@mui/material';
 import { Visibility, VisibilityOff, FitnessCenter } from '@mui/icons-material';
 
+
+
+
 const Login = () => {
+    const [errors, setErrors] = useState({});
+    const [authError, setAuthError] = useState('');
+
     const [credentials, setCredentials] = useState({ username: '', password: '' });
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -23,15 +29,57 @@ const Login = () => {
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
+        e.preventDefault(); // ✅ THIS is mandatory
+
+        if (!isFormValid || loading) return;
+
+        setAuthError('');
         setLoading(true);
+
         try {
             await login(credentials);
             navigate('/dashboard');
+        } catch {
+            setAuthError('Invalid username or password');
         } finally {
             setLoading(false);
         }
     };
+
+
+
+
+
+    const validate = () => {
+        const newErrors = {};
+
+        if (!credentials.username.trim()) {
+            newErrors.username = 'Username is required';
+        }
+
+        if (!credentials.password) {
+            newErrors.password = 'Password is required';
+        }
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+
+    const handleUsernameChange = (e) => {
+        setCredentials({ ...credentials, username: e.target.value });
+        setAuthError('');
+    };
+
+    const handlePasswordChange = (e) => {
+        setCredentials({ ...credentials, password: e.target.value });
+        setAuthError('');
+    };
+
+
+    const isFormValid =
+        credentials.username.trim().length > 0 &&
+        credentials.password.trim().length > 0;
+
 
     return (
         <Box sx={{ position: 'relative', minHeight: '100vh', overflow: 'hidden' }}>
@@ -87,19 +135,30 @@ const Login = () => {
                             </Typography>
                         </Box>
 
-                        <form onSubmit={handleSubmit}>
-                            {/* Username */}
+                        <Box
+                            component="form"
+                            onSubmit={(e) => {
+                                e.preventDefault();   // 🔥 THIS STOPS THE REFRESH
+                                handleSubmit();
+                            }}
+                        >
+
+                        {/* Username */}
                             <TextField
                                 fullWidth
                                 margin="normal"
                                 placeholder="Username"
                                 value={credentials.username}
-                                onChange={(e) =>
-                                    setCredentials({ ...credentials, username: e.target.value })
-                                }
-                                required
+                                onChange={handleUsernameChange}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                        e.preventDefault();
+                                        if (isFormValid) handleSubmit();
+                                    }
+                                }}
                                 sx={inputStyles}
                             />
+
 
                             {/* Password */}
                             <TextField
@@ -108,10 +167,13 @@ const Login = () => {
                                 placeholder="Password"
                                 type={showPassword ? 'text' : 'password'}
                                 value={credentials.password}
-                                onChange={(e) =>
-                                    setCredentials({ ...credentials, password: e.target.value })
-                                }
-                                required
+                                onChange={handlePasswordChange}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                        e.preventDefault();
+                                        if (isFormValid) handleSubmit();
+                                    }
+                                }}
                                 sx={inputStyles}
                                 InputProps={{
                                     endAdornment: (
@@ -128,12 +190,30 @@ const Login = () => {
                                 }}
                             />
 
-                            {/* Submit */}
+                            {/* Error */}
+                            {authError && (
+                                <Typography
+                                    sx={{
+                                        mt: 2,
+                                        textAlign: 'center',
+                                        fontWeight: 700,
+                                        color: '#F87171',
+                                        background: 'rgba(0,0,0,0.55)',
+                                        borderRadius: 2,
+                                        py: 1,
+                                    }}
+                                >
+                                    {authError}
+                                </Typography>
+                            )}
+
+                            {/* Button */}
                             <Button
                                 fullWidth
-                                type="submit"
                                 size="large"
-                                disabled={loading}
+                                type="submit"
+                                disabled={!isFormValid || loading}
+                                onClick={handleSubmit}
                                 sx={{
                                     mt: 3,
                                     py: 1.6,
@@ -141,15 +221,17 @@ const Login = () => {
                                     color: '#1F2937',
                                     bgcolor: '#FACC15',
                                     boxShadow: '0 10px 30px rgba(250,204,21,0.45)',
+                                    opacity: isFormValid ? 1 : 0.6,
+                                    cursor: isFormValid ? 'pointer' : 'not-allowed',
                                     '&:hover': {
-                                        bgcolor: '#EAB308',
-                                        boxShadow: '0 14px 40px rgba(250,204,21,0.6)',
+                                        bgcolor: isFormValid ? '#EAB308' : '#FACC15',
                                     },
                                 }}
                             >
                                 {loading ? 'Signing In...' : 'Sign In'}
                             </Button>
-                        </form>
+                        </Box>
+
 
                         {/* Footer */}
                         <Box sx={{ textAlign: 'center', mt: 2 }}>
