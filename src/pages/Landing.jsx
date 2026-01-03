@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import {
     Box,
     Container,
@@ -10,118 +10,259 @@ import {
     Card,
     CardContent,
     Avatar,
+    AppBar,
+    Toolbar,
+    IconButton,
 } from '@mui/material';
 import {
     FitnessCenter,
     TrendingUp,
-    Timeline,
+    Restaurant,
     EmojiEvents,
-    Group,
-    LocalFireDepartment,
+    People,
+    Speed,
+    Security,
+    CloudUpload,
+    Menu as MenuIcon,
 } from '@mui/icons-material';
+
+
 
 const Landing = () => {
     const navigate = useNavigate();
+    const heroRef = useRef(null);
+    const { scrollYProgress } = useScroll({
+        target: heroRef,
+        offset: ['start start', 'end start'],
+    });
+
+    const y = useTransform(scrollYProgress, [0, 1], ['0%', '50%']);
+    const opacity = useTransform(scrollYProgress, [0, 1], [1, 0]);
 
     const features = [
         {
-            icon: <FitnessCenter sx={{ fontSize: 50, color: '#667eea' }} />,
-            title: 'Track Workouts',
-            description: 'Log your exercises, sets, reps, and track your progress over time.',
+            icon: <FitnessCenter sx={{ fontSize: 50 }} />,
+            title: 'Smart Workout Tracking',
+            description: 'Log exercises, sets, reps, and weight with our intuitive interface.',
+            color: '#FF6B6B',
         },
         {
-            icon: <TrendingUp sx={{ fontSize: 50, color: '#764ba2' }} />,
-            title: 'Monitor Progress',
-            description: 'Visualize your fitness journey with detailed statistics and charts.',
+            icon: <TrendingUp sx={{ fontSize: 50 }} />,
+            title: 'Progress Analytics',
+            description: 'Visualize your fitness journey with detailed charts and statistics.',
+            color: '#4ECDC4',
         },
         {
-            icon: <Timeline sx={{ fontSize: 50, color: '#f093fb' }} />,
-            title: 'Set Goals',
-            description: 'Define your fitness goals and stay motivated to achieve them.',
+            icon: <Restaurant sx={{ fontSize: 50 }} />,
+            title: 'Nutrition Planning',
+            description: 'Track calories, macros, and maintain a balanced diet.',
+            color: '#FFD93D',
         },
         {
-            icon: <EmojiEvents sx={{ fontSize: 50, color: '#ffd700' }} />,
-            title: 'Achievements',
-            description: 'Earn badges and celebrate your milestones along the way.',
+            icon: <EmojiEvents sx={{ fontSize: 50 }} />,
+            title: 'Achievement System',
+            description: 'Earn badges and stay motivated with gamified fitness goals.',
+            color: '#6BCF7F',
         },
         {
-            icon: <Group sx={{ fontSize: 50, color: '#4facfe' }} />,
-            title: 'Community',
-            description: 'Connect with like-minded fitness enthusiasts and share tips.',
+            icon: <People sx={{ fontSize: 50 }} />,
+            title: 'Community Support',
+            description: 'Connect with fitness enthusiasts and share your progress.',
+            color: '#A78BFA',
         },
         {
-            icon: <LocalFireDepartment sx={{ fontSize: 50, color: '#fa709a' }} />,
-            title: 'Stay Motivated',
-            description: 'Get daily reminders and motivational quotes to keep you going.',
+            icon: <CloudUpload sx={{ fontSize: 50 }} />,
+            title: 'Cloud Sync',
+            description: 'Access your data anywhere, anytime with secure cloud storage.',
+            color: '#FB7185',
         },
     ];
 
     const stats = [
-        { number: '10K+', label: 'Active Users' },
-        { number: '50K+', label: 'Workouts Logged' },
-        { number: '100+', label: 'Exercises' },
-        { number: '4.8★', label: 'User Rating' },
+        { number: '50K+', label: 'Active Users', color: '#FF6B6B' },
+        { number: '1M+', label: 'Workouts Logged', color: '#4ECDC4' },
+        { number: '500+', label: 'Exercise Library', color: '#FFD93D' },
+        { number: '4.9★', label: 'App Rating', color: '#6BCF7F' },
+    ];
+
+    const testimonials = [
+        {
+            name: 'Sarah Johnson',
+            role: 'Fitness Enthusiast',
+            image: 'https://i.pravatar.cc/150?img=1',
+            text: 'This app transformed my fitness journey! The analytics help me stay on track.',
+            color: '#FF6B6B',
+        },
+        {
+            name: 'Mike Chen',
+            role: 'Personal Trainer',
+            image: 'https://i.pravatar.cc/150?img=12',
+            text: 'I recommend this to all my clients. The workout tracking is incredibly detailed.',
+            color: '#4ECDC4',
+        },
+        {
+            name: 'Emily Rodriguez',
+            role: 'Marathon Runner',
+            image: 'https://i.pravatar.cc/150?img=5',
+            text: 'The progress tracking keeps me motivated. Best fitness app I have used!',
+            color: '#A78BFA',
+        },
     ];
 
     return (
-        <Box>
-            {/* Hero Section */}
-            <Box
+        <Box sx={{ overflow: 'hidden' }}>
+            {/* Navigation */}
+            <AppBar
+                position="fixed"
+                enableColorOnDark
+                color="transparent"
                 sx={{
-                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                    minHeight: '100vh',
-                    display: 'flex',
-                    alignItems: 'center',
-                    color: 'white',
-                    position: 'relative',
-                    overflow: 'hidden',
+                    color: '#f3f4f6',
+                    backgroundColor: 'rgba(15, 23, 42, 0.25) !important',
+                    backdropFilter: 'blur(20px) saturate(180%)',
+                    WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+                    borderBottom: '1px solid rgba(255,255,255,0.18)',
+                    boxShadow: '0 12px 30px rgba(0,0,0,0.35)',
+
                 }}
             >
-                {/* Animated Background Elements */}
-                <Box
+
+            <Toolbar>
+                    <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
+                        <FitnessCenter sx={{ fontSize: 32, color: 'yellow', mr: 1 }} />
+                        <Typography variant="h6" sx={{ fontWeight: 800, color: '#f3f4f6' }}>
+                            FitTrack.
+                        </Typography>
+                    </Box>
+                    <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 3 }}>
+                        <Button sx={{ color: '#f3f4f6', fontWeight: 600 }}>Features</Button>
+                        <Button sx={{ color: '#f3f4f6', fontWeight: 600 }}>Pricing</Button>
+                        <Button sx={{ color: '#f3f4f6', fontWeight: 600 }}>About</Button>
+                    </Box>
+                    <Box sx={{ ml: 3, display: 'flex', gap: 2 }}>
+                        <Button
+                            variant="outlined"
+                            onClick={() => navigate('/login')}
+                            sx={{
+                                borderColor: '#FFD93D',
+                                color: '#FFD93D',
+                                fontWeight: 600,
+                                borderWidth: 2,
+                                '&:hover': {
+                                    borderColor: '#FFC929',
+                                    bgcolor: 'rgba(255,217,61,0.15)',
+                                    borderWidth: 2,
+                                },
+                            }}
+                        >
+                            Sign In
+                        </Button>
+
+                        <Button
+                            variant="contained"
+                            onClick={() => navigate('/register')}
+                            sx={{
+                                bgcolor: '#FFD93D',
+                                color: '#1F2937',
+                                fontWeight: 700,
+                                boxShadow: '0 6px 24px rgba(255,217,61,0.45)',
+                                '&:hover': {
+                                    bgcolor: '#FFC929',
+                                    boxShadow: '0 10px 32px rgba(255,217,61,0.6)',
+                                },
+                            }}
+                        >
+                            Get Started
+                        </Button>
+
+                    </Box>
+                    <IconButton sx={{ ml: 2, display: { xs: 'flex', md: 'none' } }}>
+                        <MenuIcon />
+                    </IconButton>
+                </Toolbar>
+            </AppBar>
+
+            {/* Hero Section */}
+            <Box
+                ref={heroRef}
+                sx={{
+                    minHeight: '100vh',
+                    position: 'relative',
+                    overflow: 'hidden',
+                    display: 'flex',
+                    alignItems: 'center',
+
+                }}
+            >
+
+
+            <Box
                     sx={{
                         position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        bottom: 0,
-                        opacity: 0.1,
-                        backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+                        inset: 0,
+                        background: 'rgba(255,255,255,0.12)',
+                        border: '1px solid rgba(255,255,255,0.25)',
+                        backdropFilter: 'blur(15px)',
+
                     }}
                 />
 
+                <video
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    preload="auto"
+                    style={{
+                        position: 'absolute',
+                        inset: 0,
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        zIndex: 0,
+                    }}
+                >
+                    <source
+                        src="https://assets.mixkit.co/videos/42898/42898-720.mp4"
+                        type="video/mp4"
+                    />
+                </video>
+
                 <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1 }}>
-                    <Grid container spacing={4} alignItems="center">
+                    <Grid container spacing={6}>
                         <Grid item xs={12} md={6}>
                             <motion.div
-                                initial={{ opacity: 0, y: 50 }}
-                                animate={{ opacity: 1, y: 0 }}
+                                style={{ y, opacity }}
+                                initial={{ opacity: 0, x: -50 }}
+                                animate={{ opacity: 1, x: 0 }}
                                 transition={{ duration: 0.8 }}
                             >
                                 <Typography
-                                    variant="h1"
                                     sx={{
-                                        fontSize: { xs: '2.5rem', md: '4rem' },
-                                        fontWeight: 800,
-                                        mb: 2,
-                                        textShadow: '2px 2px 4px rgba(0,0,0,0.2)',
+                                        fontSize: { xs: '3rem', md: '5rem' },
+                                        fontWeight: 900,
+                                        color: 'white',
+                                        lineHeight: 1.1,
+                                        mb: 3,
                                     }}
                                 >
-                                    Transform Your
+                                    Your Fitness
                                     <br />
-                                    <span style={{ color: '#ffd700' }}>Fitness Journey</span>
+                                    <span style={{ color: '#FFD93D' }}>Journey Starts</span>
+                                    <br />
+                                    Here.
                                 </Typography>
 
                                 <Typography
                                     variant="h5"
                                     sx={{
+                                        color: 'rgba(255,255,255,0.9)',
                                         mb: 4,
-                                        opacity: 0.9,
-                                        fontSize: { xs: '1rem', md: '1.5rem' },
+                                        fontWeight: 400,
                                     }}
                                 >
-                                    Track workouts, monitor progress, and achieve your fitness goals
-                                    with our comprehensive fitness tracking platform.
+                                    Track workouts, monitor progress, achieve your goals.
+                                    The most powerful fitness tracking app designed for your success.
                                 </Typography>
 
                                 <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
@@ -131,18 +272,20 @@ const Landing = () => {
                                             size="large"
                                             onClick={() => navigate('/register')}
                                             sx={{
-                                                bgcolor: 'white',
-                                                color: '#667eea',
-                                                px: 4,
-                                                py: 1.5,
-                                                fontSize: '1.1rem',
-                                                fontWeight: 600,
+                                                bgcolor: '#FFD93D',
+                                                color: '#1F2937',
+                                                px: 5,
+                                                py: 2,
+                                                fontSize: '1.2rem',
+                                                fontWeight: 700,
+                                                boxShadow: '0 8px 32px rgba(255,217,61,0.4)',
                                                 '&:hover': {
-                                                    bgcolor: '#f0f0f0',
+                                                    bgcolor: '#FFC929',
+                                                    transform: 'translateY(-2px)',
                                                 },
                                             }}
                                         >
-                                            Get Started Free
+                                            Start Free Trial
                                         </Button>
                                     </motion.div>
 
@@ -150,66 +293,56 @@ const Landing = () => {
                                         <Button
                                             variant="outlined"
                                             size="large"
-                                            onClick={() => navigate('/login')}
+                                            onClick={() => ('/about')}
                                             sx={{
                                                 borderColor: 'white',
                                                 color: 'white',
-                                                px: 4,
-                                                py: 1.5,
-                                                fontSize: '1.1rem',
-                                                fontWeight: 600,
+                                                px: 5,
+                                                py: 2,
+                                                fontSize: '1.2rem',
+                                                fontWeight: 700,
+                                                borderWidth: 2,
                                                 '&:hover': {
                                                     borderColor: 'white',
                                                     bgcolor: 'rgba(255,255,255,0.1)',
+                                                    borderWidth: 2,
                                                 },
                                             }}
                                         >
-                                            Sign In
+                                            Watch Demo
                                         </Button>
                                     </motion.div>
+                                </Box>
+
+                                <Box sx={{ display: 'flex', gap: 4, mt: 5, alignItems: 'center' }}>
+                                    <Box>
+                                        <Typography sx={{ fontSize: '2rem', fontWeight: 800, color: 'white' }}>
+                                            50K+
+                                        </Typography>
+                                        <Typography sx={{ color: 'rgba(255,255,255,0.8)' }}>
+                                            Active Users
+                                        </Typography>
+                                    </Box>
+                                    <Box>
+                                        <Typography sx={{ fontSize: '2rem', fontWeight: 800, color: 'white' }}>
+                                            4.9★
+                                        </Typography>
+                                        <Typography sx={{ color: 'rgba(255,255,255,0.8)' }}>
+                                            App Rating
+                                        </Typography>
+                                    </Box>
                                 </Box>
                             </motion.div>
                         </Grid>
 
-                        <Grid item xs={12} md={6}>
-                            <motion.div
-                                initial={{ opacity: 0, scale: 0.8 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                transition={{ duration: 0.8, delay: 0.2 }}
-                            >
-                                <Box
-                                    component="img"
-                                    src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=600"
-                                    alt="Fitness"
-                                    sx={{
-                                        width: '100%',
-                                        borderRadius: 4,
-                                        boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
-                                    }}
-                                />
-                            </motion.div>
-                        </Grid>
+
                     </Grid>
                 </Container>
-
-                {/* Scroll Indicator */}
-                <motion.div
-                    animate={{ y: [0, 10, 0] }}
-                    transition={{ repeat: Infinity, duration: 1.5 }}
-                    style={{
-                        position: 'absolute',
-                        bottom: 30,
-                        left: '50%',
-                        transform: 'translateX(-50%)',
-                    }}
-                >
-                    <Typography sx={{ opacity: 0.7 }}>Scroll to explore</Typography>
-                </motion.div>
             </Box>
 
             {/* Stats Section */}
-            <Container maxWidth="lg" sx={{ py: 8 }}>
-                <Grid container spacing={4}>
+            <Container maxWidth="lg" sx={{ py: 8, mt: -8, position: 'relative', zIndex: 2 }}>
+                <Grid container spacing={3}>
                     {stats.map((stat, index) => (
                         <Grid item xs={6} md={3} key={index}>
                             <motion.div
@@ -218,22 +351,20 @@ const Landing = () => {
                                 transition={{ duration: 0.5, delay: index * 0.1 }}
                                 viewport={{ once: true }}
                             >
-                                <Box sx={{ textAlign: 'center' }}>
-                                    <Typography
-                                        variant="h3"
-                                        sx={{
-                                            fontWeight: 800,
-                                            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                                            WebkitBackgroundClip: 'text',
-                                            WebkitTextFillColor: 'transparent',
-                                        }}
-                                    >
+                                <Card
+                                    sx={{
+                                        bgcolor: stat.color,
+                                        color: 'white',
+                                        textAlign: 'center',
+                                        p: 3,
+                                        boxShadow: '0 10px 40px rgba(0,0,0,0.15)',
+                                    }}
+                                >
+                                    <Typography variant="h3" sx={{ fontWeight: 900, mb: 1 }}>
                                         {stat.number}
                                     </Typography>
-                                    <Typography variant="h6" color="text.secondary">
-                                        {stat.label}
-                                    </Typography>
-                                </Box>
+                                    <Typography sx={{ fontWeight: 600 }}>{stat.label}</Typography>
+                                </Card>
                             </motion.div>
                         </Grid>
                     ))}
@@ -241,34 +372,25 @@ const Landing = () => {
             </Container>
 
             {/* Features Section */}
-            <Box sx={{ bgcolor: '#f5f5f5', py: 10 }}>
+            <Box sx={{ bgcolor: '#F9FAFB', py: 12 }}>
                 <Container maxWidth="lg">
-                    <motion.div
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6 }}
-                        viewport={{ once: true }}
-                    >
+                    <Box sx={{ textAlign: 'center', mb: 8 }}>
                         <Typography
                             variant="h2"
-                            align="center"
                             sx={{
-                                fontWeight: 700,
+                                fontWeight: 900,
                                 mb: 2,
-                                fontSize: { xs: '2rem', md: '3rem' },
+                                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                                WebkitBackgroundClip: 'text',
+                                WebkitTextFillColor: 'transparent',
                             }}
                         >
-                            Everything You Need
+                            Powerful Features
                         </Typography>
-                        <Typography
-                            variant="h6"
-                            align="center"
-                            color="text.secondary"
-                            sx={{ mb: 6 }}
-                        >
-                            Powerful features to help you reach your fitness goals
+                        <Typography variant="h6" color="text.secondary">
+                            Everything you need to crush your fitness goals
                         </Typography>
-                    </motion.div>
+                    </Box>
 
                     <Grid container spacing={4}>
                         {features.map((feature, index) => (
@@ -283,28 +405,33 @@ const Landing = () => {
                                     <Card
                                         sx={{
                                             height: '100%',
+                                            borderTop: `4px solid ${feature.color}`,
                                             transition: 'all 0.3s',
                                             '&:hover': {
-                                                boxShadow: '0 10px 30px rgba(0,0,0,0.15)',
+                                                boxShadow: `0 20px 40px ${feature.color}40`,
                                             },
                                         }}
                                     >
-                                        <CardContent sx={{ textAlign: 'center', p: 4 }}>
-                                            <Avatar
+                                        <CardContent sx={{ p: 4 }}>
+                                            <Box
                                                 sx={{
                                                     width: 80,
                                                     height: 80,
-                                                    mx: 'auto',
-                                                    mb: 2,
-                                                    bgcolor: 'transparent',
+                                                    borderRadius: 3,
+                                                    bgcolor: `${feature.color}20`,
+                                                    color: feature.color,
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    mb: 3,
                                                 }}
                                             >
                                                 {feature.icon}
-                                            </Avatar>
-                                            <Typography variant="h5" sx={{ fontWeight: 600, mb: 2 }}>
+                                            </Box>
+                                            <Typography variant="h5" sx={{ fontWeight: 700, mb: 2 }}>
                                                 {feature.title}
                                             </Typography>
-                                            <Typography color="text.secondary">
+                                            <Typography color="text.secondary" sx={{ lineHeight: 1.8 }}>
                                                 {feature.description}
                                             </Typography>
                                         </CardContent>
@@ -316,49 +443,133 @@ const Landing = () => {
                 </Container>
             </Box>
 
+            {/* Testimonials */}
+            <Container maxWidth="lg" sx={{ py: 12 }}>
+                <Box sx={{ textAlign: 'center', mb: 8 }}>
+                    <Typography variant="h2" sx={{ fontWeight: 900, mb: 2 }}>
+                        Loved by Thousands
+                    </Typography>
+                    <Typography variant="h6" color="text.secondary">
+                        See what our users say about FitTrack
+                    </Typography>
+                </Box>
+
+                <Grid container spacing={4}>
+                    {testimonials.map((testimonial, index) => (
+                        <Grid item xs={12} md={4} key={index}>
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                whileInView={{ opacity: 1, scale: 1 }}
+                                transition={{ duration: 0.5, delay: index * 0.1 }}
+                                viewport={{ once: true }}
+                            >
+                                <Card
+                                    sx={{
+                                        height: '100%',
+                                        borderLeft: `4px solid ${testimonial.color}`,
+                                        p: 3,
+                                    }}
+                                >
+                                    <CardContent>
+                                        <Typography sx={{ mb: 3, fontSize: '1.1rem', lineHeight: 1.8 }}>
+                                            "{testimonial.text}"
+                                        </Typography>
+                                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                                            <Avatar src={testimonial.image} sx={{ width: 56, height: 56 }} />
+                                            <Box>
+                                                <Typography sx={{ fontWeight: 700 }}>
+                                                    {testimonial.name}
+                                                </Typography>
+                                                <Typography color="text.secondary" variant="body2">
+                                                    {testimonial.role}
+                                                </Typography>
+                                            </Box>
+                                        </Box>
+                                    </CardContent>
+                                </Card>
+                            </motion.div>
+                        </Grid>
+                    ))}
+                </Grid>
+            </Container>
+
             {/* CTA Section */}
             <Box
                 sx={{
                     background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                    py: 10,
+                    py: 12,
                     color: 'white',
                     textAlign: 'center',
                 }}
             >
                 <Container maxWidth="md">
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.6 }}
-                        viewport={{ once: true }}
-                    >
-                        <Typography variant="h3" sx={{ fontWeight: 700, mb: 3 }}>
-                            Ready to Start Your Journey?
-                        </Typography>
-                        <Typography variant="h6" sx={{ mb: 4, opacity: 0.9 }}>
-                            Join thousands of users already transforming their lives
-                        </Typography>
-                        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                            <Button
-                                variant="contained"
-                                size="large"
-                                onClick={() => navigate('/register')}
-                                sx={{
-                                    bgcolor: 'white',
-                                    color: '#667eea',
-                                    px: 6,
-                                    py: 2,
-                                    fontSize: '1.2rem',
-                                    fontWeight: 600,
-                                    '&:hover': {
-                                        bgcolor: '#f0f0f0',
-                                    },
-                                }}
-                            >
-                                Start Free Today
-                            </Button>
-                        </motion.div>
+                    <Typography variant="h2" sx={{ fontWeight: 900, mb: 3 }}>
+                        Ready to Transform?
+                    </Typography>
+                    <Typography variant="h6" sx={{ mb: 4, opacity: 0.9 }}>
+                        Join 50,000+ users already crushing their fitness goals
+                    </Typography>
+                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                        <Button
+                            variant="contained"
+                            size="large"
+                            onClick={() => navigate('/register')}
+                            sx={{
+                                bgcolor: '#FFD93D',
+                                color: '#1F2937',
+                                px: 6,
+                                py: 2,
+                                fontSize: '1.3rem',
+                                fontWeight: 700,
+                                boxShadow: '0 8px 32px rgba(255,217,61,0.4)',
+                                '&:hover': { bgcolor: '#FFC929' },
+                            }}
+                        >
+                            Start Your Free Trial
+                        </Button>
                     </motion.div>
+                </Container>
+            </Box>
+
+            {/* Footer */}
+            <Box sx={{ bgcolor: '#1F2937', color: 'white', py: 6 }}>
+                <Container maxWidth="lg">
+                    <Grid container spacing={4}>
+                        <Grid item xs={12} md={4}>
+                            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                                <FitnessCenter sx={{ fontSize: 32, color: 'yellow', mr: 1 }} />
+                                <Typography variant="h6" sx={{ fontWeight: 800 }}>
+                                    FitTrack.
+                                </Typography>
+                            </Box>
+                            <Typography color="rgba(255,255,255,0.7)">
+                                Your ultimate fitness tracking companion
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={6} md={2}>
+                            <Typography sx={{ fontWeight: 700, mb: 2 }}>Product</Typography>
+                            <Typography color="rgba(255,255,255,0.7)" sx={{ mb: 1 }}>Features</Typography>
+                            <Typography color="rgba(255,255,255,0.7)" sx={{ mb: 1 }}>Pricing</Typography>
+                            <Typography color="rgba(255,255,255,0.7)">Support</Typography>
+                        </Grid>
+                        <Grid item xs={6} md={2}>
+                            <Typography sx={{ fontWeight: 700, mb: 2 }}>Company</Typography>
+                            <Typography color="rgba(255,255,255,0.7)" sx={{ mb: 1 }}>About</Typography>
+                            <Typography color="rgba(255,255,255,0.7)" sx={{ mb: 1 }}>Blog</Typography>
+                            <Typography color="rgba(255,255,255,0.7)">Careers</Typography>
+                        </Grid>
+                        <Grid item xs={12} md={4}>
+                            <Typography sx={{ fontWeight: 700, mb: 2 }}>Stay Updated</Typography>
+                            <Typography color="rgba(255,255,255,0.7)">
+                                Subscribe to our newsletter for fitness tips and updates
+                            </Typography>
+                        </Grid>
+                    </Grid>
+                    <Box sx={{ textAlign: 'center', mt: 4, pt: 4, borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+                        <Typography color="rgba(255,255,255,0.5)">
+                            © 2026 FitTrack. All rights reserved.
+                        </Typography>
+                    </Box>
                 </Container>
             </Box>
         </Box>

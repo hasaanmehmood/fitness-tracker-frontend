@@ -24,16 +24,16 @@ const Navbar = () => {
     const navigate = useNavigate();
     const [anchorEl, setAnchorEl] = useState(null);
 
-    const handleMenu = (event) => {
+    const handleMenuOpen = (event) => {
         setAnchorEl(event.currentTarget);
     };
 
-    const handleClose = () => {
+    const handleMenuClose = () => {
         setAnchorEl(null);
     };
 
     const handleLogout = () => {
-        handleClose();
+        handleMenuClose();
         logout();
         navigate('/');
     };
@@ -41,37 +41,88 @@ const Navbar = () => {
     return (
         <AppBar
             position="sticky"
+            elevation={0}
             sx={{
-                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                background: `
+      linear-gradient(
+        180deg,
+        rgba(255,255,255,0.08),
+        rgba(255,255,255,0.02)
+      ),
+      rgba(15, 23, 42, 0.15)
+    `,
+                backdropFilter: 'blur(20px) saturate(180%)',
+                WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+
+                borderBottom: '1px solid rgba(255,255,255,0.18)',
+
+                boxShadow: `
+      0 1px 0 rgba(255,255,255,0.15),
+      0 12px 30px rgba(0,0,0,0.35)
+    `,
             }}
         >
-            <Toolbar>
-                <FitnessCenter sx={{ mr: 2 }} />
-                <Typography
-                    variant="h6"
-                    component="div"
-                    sx={{ flexGrow: 1, fontWeight: 700, cursor: 'pointer' }}
+
+        <Toolbar sx={{ minHeight: 72 }}>
+                {/* Logo */}
+                <Box
+                    sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
                     onClick={() => navigate('/dashboard')}
                 >
-                    Fitness Tracker
-                </Typography>
+                    <FitnessCenter
+                        sx={{
+                            fontSize: 28,
+                            mr: 1.5,
+                            color: '#22D3EE', // cyan accent
+                        }}
+                    />
+                    <Typography
+                        variant="h6"
+                        sx={{
+                            fontWeight: 700,
+                            letterSpacing: '-0.3px',
+                            color: '#f3f4f6',
+                        }}
+                    >
+                        Fitness Tracker
+                    </Typography>
+                </Box>
 
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                {/* Spacer */}
+                <Box sx={{ flexGrow: 1 }} />
+
+                {/* Actions */}
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                     <Button
-                        color="inherit"
                         startIcon={<Dashboard />}
                         onClick={() => navigate('/dashboard')}
+                        sx={{
+                            color: '#E5E7EB',
+                            fontWeight: 500,
+                            textTransform: 'none',
+                            px: 2,
+                            borderRadius: 2,
+                            '&:hover': {
+                                backgroundColor: 'rgba(255,255,255,0.08)',
+                            },
+                        }}
                     >
                         Dashboard
                     </Button>
 
-                    <IconButton
-                        size="large"
-                        onClick={handleMenu}
-                        color="inherit"
-                    >
-                        <Avatar sx={{ width: 32, height: 32, bgcolor: 'rgba(255,255,255,0.2)' }}>
+                    {/* Avatar Menu */}
+                    <IconButton onClick={handleMenuOpen} sx={{ ml: 1 }}>
+                        <Avatar
+                            sx={{
+                                width: 34,
+                                height: 34,
+                                fontWeight: 700,
+                                bgcolor: 'rgba(255,255,255,0.15)',
+                                color: '#E5E7EB',
+                                backdropFilter: 'blur(6px)',
+                                border: '1px solid rgba(255,255,255,0.25)',
+                            }}
+                        >
                             {user?.username?.charAt(0).toUpperCase()}
                         </Avatar>
                     </IconButton>
@@ -79,14 +130,46 @@ const Navbar = () => {
                     <Menu
                         anchorEl={anchorEl}
                         open={Boolean(anchorEl)}
-                        onClose={handleClose}
+                        onClose={handleMenuClose}
+                        PaperProps={{
+                            sx: {
+                                mt: 1,
+                                background: 'rgba(15, 23, 42, 0.85)',
+                                backdropFilter: 'blur(14px)',
+                                WebkitBackdropFilter: 'blur(14px)',
+                                borderRadius: 3,
+                                border: '1px solid rgba(255,255,255,0.12)',
+                                color: '#E5E7EB',
+                                minWidth: 180,
+                            },
+                        }}
                     >
-                        <MenuItem onClick={() => { handleClose(); navigate('/profile'); }}>
-                            <AccountCircle sx={{ mr: 1 }} />
+                        <MenuItem
+                            onClick={() => {
+                                handleMenuClose();
+                                navigate('/profile');
+                            }}
+                            sx={{
+                                gap: 1,
+                                '&:hover': {
+                                    backgroundColor: 'rgba(255,255,255,0.08)',
+                                },
+                            }}
+                        >
+                            <AccountCircle fontSize="small" />
                             Profile
                         </MenuItem>
-                        <MenuItem onClick={handleLogout}>
-                            <ExitToApp sx={{ mr: 1 }} />
+
+                        <MenuItem
+                            onClick={handleLogout}
+                            sx={{
+                                gap: 1,
+                                '&:hover': {
+                                    backgroundColor: 'rgba(255,255,255,0.08)',
+                                },
+                            }}
+                        >
+                            <ExitToApp fontSize="small" />
                             Logout
                         </MenuItem>
                     </Menu>

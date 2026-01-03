@@ -28,104 +28,122 @@ const Login = () => {
         try {
             await login(credentials);
             navigate('/dashboard');
-        } catch (error) {
-            // Error handled by AuthContext (toast)
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <Box
-            sx={{
-                minHeight: '100vh',
-                display: 'flex',
-                alignItems: 'center',
-                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                py: 4,
-            }}
-        >
-            <Container maxWidth="sm">
+        <Box sx={{ position: 'relative', minHeight: '100vh', overflow: 'hidden' }}>
+            {/* Background Video */}
+            <Box
+                component="video"
+                autoPlay
+                muted
+                loop
+                playsInline
+                sx={{
+                    position: 'absolute',
+                    inset: 0,
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    zIndex: -2,
+
+                }}
+            >
+                <source
+                    src="https://assets.mixkit.co/videos/2984/2984-720.mp4"
+                    type="video/mp4"
+                />
+            </Box>
+
+            <Container maxWidth="sm" sx={{ py: 19 }}>
                 <motion.div
-                    initial={{ opacity: 0, y: 50 }}
+                    initial={{ opacity: 0, y: 40 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5 }}
+                    transition={{ duration: 0.6 }}
                 >
                     <Paper
-                        elevation={10}
+                        elevation={0}
                         sx={{
                             p: 4,
-                            borderRadius: 3,
-                            background: 'white',
+                            borderRadius: 4,
+                            background: 'rgba(255,255,255,0.15)',
+                            backdropFilter: 'blur(20px)',
+                            WebkitBackdropFilter: 'blur(20px)',
+                            border: '1px solid rgba(255,255,255,0.25)',
+                            boxShadow: '0 20px 40px rgba(0,0,0,0.35)',
                         }}
                     >
-                        {/* Logo */}
+                        {/* Header */}
                         <Box sx={{ textAlign: 'center', mb: 3 }}>
-                            <motion.div
-                                animate={{ rotate: 360 }}
-                                transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
-                            >
-                                <FitnessCenter sx={{ fontSize: 60, color: '#667eea' }} />
-                            </motion.div>
-                            <Typography variant="h4" sx={{ fontWeight: 700, mt: 2 }}>
+                            <FitnessCenter sx={{ fontSize: 56, color: '#FACC15' }} />
+                            <Typography variant="h4" sx={{ fontWeight: 800, mt: 1, color: 'white' }}>
                                 Welcome Back
                             </Typography>
-                            <Typography color="text.secondary">
+                            <Typography sx={{ color: 'rgba(255,255,255,0.8)' }}>
                                 Sign in to continue your fitness journey
                             </Typography>
                         </Box>
 
                         <form onSubmit={handleSubmit}>
+                            {/* Username */}
                             <TextField
                                 fullWidth
-                                label="Username"
                                 margin="normal"
+                                placeholder="Username"
                                 value={credentials.username}
                                 onChange={(e) =>
                                     setCredentials({ ...credentials, username: e.target.value })
                                 }
                                 required
-                                autoFocus
+                                sx={inputStyles}
                             />
 
+                            {/* Password */}
                             <TextField
                                 fullWidth
-                                label="Password"
-                                type={showPassword ? 'text' : 'password'}
                                 margin="normal"
+                                placeholder="Password"
+                                type={showPassword ? 'text' : 'password'}
                                 value={credentials.password}
                                 onChange={(e) =>
                                     setCredentials({ ...credentials, password: e.target.value })
                                 }
                                 required
+                                sx={inputStyles}
                                 InputProps={{
                                     endAdornment: (
                                         <InputAdornment position="end">
-                                            <IconButton
-                                                onClick={() => setShowPassword(!showPassword)}
-                                                edge="end"
-                                            >
-                                                {showPassword ? <VisibilityOff /> : <Visibility />}
+                                            <IconButton onClick={() => setShowPassword(!showPassword)}>
+                                                {showPassword ? (
+                                                    <VisibilityOff sx={{ color: 'white' }} />
+                                                ) : (
+                                                    <Visibility sx={{ color: 'white' }} />
+                                                )}
                                             </IconButton>
                                         </InputAdornment>
                                     ),
                                 }}
                             />
 
+                            {/* Submit */}
                             <Button
                                 fullWidth
                                 type="submit"
-                                variant="contained"
                                 size="large"
                                 disabled={loading}
                                 sx={{
                                     mt: 3,
-                                    mb: 2,
-                                    py: 1.5,
-                                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                                    fontWeight: 600,
+                                    py: 1.6,
+                                    fontWeight: 800,
+                                    color: '#1F2937',
+                                    bgcolor: '#FACC15',
+                                    boxShadow: '0 10px 30px rgba(250,204,21,0.45)',
                                     '&:hover': {
-                                        background: 'linear-gradient(135deg, #5568d3 0%, #653a8e 100%)',
+                                        bgcolor: '#EAB308',
+                                        boxShadow: '0 14px 40px rgba(250,204,21,0.6)',
                                     },
                                 }}
                             >
@@ -133,13 +151,19 @@ const Login = () => {
                             </Button>
                         </form>
 
+                        {/* Footer */}
                         <Box sx={{ textAlign: 'center', mt: 2 }}>
-                            <Typography variant="body2" color="text.secondary">
-                                Don't have an account?{' '}
+                            <Typography sx={{ color: 'rgba(255,255,255,0.8)' }}>
+                                Don&apos;t have an account?{' '}
                                 <Link
                                     component={RouterLink}
                                     to="/register"
-                                    sx={{ fontWeight: 600, textDecoration: 'none' }}
+                                    sx={{
+                                        fontWeight: 700,
+                                        color: '#FACC15',
+                                        textDecoration: 'none',
+                                        '&:hover': { textDecoration: 'underline' },
+                                    }}
                                 >
                                     Sign Up
                                 </Link>
@@ -150,6 +174,22 @@ const Login = () => {
             </Container>
         </Box>
     );
+};
+
+const inputStyles = {
+    '& .MuiOutlinedInput-root': {
+        color: 'white',
+        backgroundColor: 'rgba(0,0,0,0.25)',
+        '& fieldset': {
+            borderColor: 'rgba(255,255,255,0.4)',
+        },
+        '&:hover fieldset': {
+            borderColor: '#FACC15',
+        },
+        '&.Mui-focused fieldset': {
+            borderColor: '#FACC15',
+        },
+    },
 };
 
 export default Login;
