@@ -25,17 +25,38 @@ api.interceptors.request.use(
 );
 
 // Response interceptor - Handle token expiration
+// api.interceptors.response.use(
+//     (response) => response,
+//     (error) => {
+//         if (error.response?.status === 401) {
+//             localStorage.removeItem('jwtToken');
+//             localStorage.removeItem('user');
+//             window.location.href = '/login';
+//         }
+//         return Promise.reject(error);
+//     }
+// );
+// Response interceptor - Handle token expiration
 api.interceptors.response.use(
     (response) => response,
     (error) => {
         if (error.response?.status === 401) {
-            localStorage.removeItem('jwtToken');
-            localStorage.removeItem('user');
-            window.location.href = '/login';
+            const token = localStorage.getItem('jwtToken');
+            const isLoginRequest = error.config?.url?.includes('/auth/login');
+
+            // Only redirect if we have a token (expired) and it's not a login request
+            if (token && !isLoginRequest) {
+                localStorage.removeItem('jwtToken');
+                localStorage.removeItem('user');
+                if (window.location.pathname !== '/login') {
+                    window.location.href = '/login';
+                }
+            }
         }
         return Promise.reject(error);
     }
 );
+
 
 // ========== Authentication APIs ==========
 export const authAPI = {

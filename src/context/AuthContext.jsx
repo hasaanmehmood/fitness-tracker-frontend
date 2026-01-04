@@ -63,7 +63,10 @@ export const AuthProvider = ({ children }) => {
             return response.data;
         } catch (error) {
             const message = error.response?.data?.message || 'Invalid username or password';
-            toast.error(message);
+            toast.error(message, {
+                duration: 4000,
+                position: 'top-center',
+            });
             throw error;
         }
     };

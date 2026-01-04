@@ -45,8 +45,13 @@ const ProtectedRoute = ({ children }) => {
 };
 
 const PublicRoute = ({ children }) => {
-    const { isAuthenticated } = useAuth();
-    return !isAuthenticated ? children : <Navigate to="/dashboard" />;
+    const { isAuthenticated, loading } = useAuth();
+
+    if (loading) {
+        return <div>Loading...</div>;
+    }
+
+    return !isAuthenticated ? children : <Navigate to="/dashboard" replace />;
 };
 
 function App() {
@@ -84,19 +89,11 @@ function App() {
                         <Route path="/" element={<Landing />} />
                         <Route
                             path="/login"
-                            element={
-                                <PublicRoute>
-                                    <Login />
-                                </PublicRoute>
-                            }
+                            element={<Login />}
                         />
                         <Route
                             path="/register"
-                            element={
-                                <PublicRoute>
-                                    <Register />
-                                </PublicRoute>
-                            }
+                            element={<Register />}
                         />
 
                         {/* Protected Routes */}

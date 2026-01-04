@@ -20,8 +20,47 @@ const Login = () => {
     const [credentials, setCredentials] = useState({ username: '', password: '' });
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
-    const { login } = useAuth();
+    // const { login } = useAuth();
+    const { login, isAuthenticated } = useAuth();
     const navigate = useNavigate();
+
+    React.useEffect(() => {
+        if (isAuthenticated) {
+            navigate('/dashboard', { replace: true });
+        }
+    }, [isAuthenticated, navigate]);
+
+    // const handleSubmit = async (e) => {
+    //     e.preventDefault();
+    //     e.stopPropagation();
+    //
+    //     // Validation
+    //     if (!credentials.username || !credentials.password) {
+    //         toast.error('Please enter username and password');
+    //         return;
+    //     }
+    //
+    //     if (credentials.username.length < 3) {
+    //         toast.error('Username must be at least 3 characters');
+    //         return;
+    //     }
+    //
+    //     if (credentials.password.length < 6) {
+    //         toast.error('Password must be at least 6 characters');
+    //         return;
+    //     }
+    //
+    //     setLoading(true);
+    //     try {
+    //         await login(credentials);
+    //         navigate('/dashboard');
+    //     } catch (error) {
+    //         console.error('Login failed:', error);
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // };
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -30,17 +69,17 @@ const Login = () => {
         // Validation
         if (!credentials.username || !credentials.password) {
             toast.error('Please enter username and password');
-            return;
+            return false;
         }
 
         if (credentials.username.length < 3) {
             toast.error('Username must be at least 3 characters');
-            return;
+            return false;
         }
 
         if (credentials.password.length < 6) {
             toast.error('Password must be at least 6 characters');
-            return;
+            return false;
         }
 
         setLoading(true);
@@ -49,10 +88,17 @@ const Login = () => {
             navigate('/dashboard');
         } catch (error) {
             console.error('Login failed:', error);
-        } finally {
             setLoading(false);
+            return false;
         }
+
+        setLoading(false);
+        return false;
     };
+
+
+
+
 
     const handleUsernameChange = (e) => {
         setCredentials({ ...credentials, username: e.target.value });
@@ -119,11 +165,23 @@ const Login = () => {
                             </Typography>
                         </Box>
 
+                        {/*<Box*/}
+                        {/*    component="form"*/}
+                        {/*    onSubmit={handleSubmit}*/}
+                        {/*    noValidate*/}
+                        {/*>*/}
+
                         <Box
                             component="form"
-                            onSubmit={handleSubmit}
+                            onSubmit={(e) => {
+                                e.preventDefault();
+                                handleSubmit(e);
+                                return false;
+                            }}
                             noValidate
+                            autoComplete="off"
                         >
+
                             {/* Username */}
                             <TextField
                                 fullWidth
