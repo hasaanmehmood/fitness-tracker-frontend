@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { userAPI } from '../services/api';
 import toast from 'react-hot-toast';
+import { useAuth } from '../context/AuthContext';
+
 import {
     Container,
     Paper,
@@ -16,6 +18,8 @@ import {
 import { Save, PhotoCamera } from '@mui/icons-material';
 
 const Profile = () => {
+    const { updateUser } = useAuth();
+
     const [loading, setLoading] = useState(false);
     const [uploading, setUploading] = useState(false);
     const [profile, setProfile] = useState(null);
@@ -35,12 +39,19 @@ const Profile = () => {
             const response = await userAPI.getProfile();
             console.log('Profile loaded:', response.data); // Debug
             setProfile(response.data);
+
+            updateUser({
+                profileImage: response.data.profileImage,
+                fullName: response.data.fullName
+            });
+
             setFormData({
                 fullName: response.data.fullName || '',
                 weight: response.data.weight || '',
                 height: response.data.height || '',
                 fitnessGoal: response.data.fitnessGoal || '',
             });
+
         } catch (error) {
             console.error('Load profile error:', error);
             toast.error('Failed to load profile');
@@ -127,6 +138,7 @@ const Profile = () => {
                 </Typography>
 
                 {/* Profile Image */}
+                {/* Profile Image */}
                 <Box sx={{ textAlign: 'center', mb: 4 }}>
                     <Avatar
                         sx={{
@@ -137,7 +149,14 @@ const Profile = () => {
                             fontSize: 48,
                             background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                         }}
-                        src={profile.profileImage}
+                        src={profile.profileImage ? `http://localhost:8080${profile.profileImage}` : ''}
+                        imgProps={{
+                            crossOrigin: 'anonymous',
+                            onError: (e) => {
+                                console.error('Image failed to load:', profile.profileImage);
+                                e.target.style.display = 'none';
+                            }
+                        }}
                     >
                         {profile.username?.charAt(0).toUpperCase()}
                     </Avatar>

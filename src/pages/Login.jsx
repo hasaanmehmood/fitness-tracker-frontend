@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { motion } from 'framer-motion';
+import toast from 'react-hot-toast';
 import {
     Container,
     Paper,
@@ -15,13 +16,7 @@ import {
 } from '@mui/material';
 import { Visibility, VisibilityOff, FitnessCenter } from '@mui/icons-material';
 
-
-
-
 const Login = () => {
-    const [errors, setErrors] = useState({});
-    const [authError, setAuthError] = useState('');
-
     const [credentials, setCredentials] = useState({ username: '', password: '' });
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -29,57 +24,47 @@ const Login = () => {
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
-        e.preventDefault(); // ✅ THIS is mandatory
+        e.preventDefault();
+        e.stopPropagation();
 
-        if (!isFormValid || loading) return;
+        // Validation
+        if (!credentials.username || !credentials.password) {
+            toast.error('Please enter username and password');
+            return;
+        }
 
-        setAuthError('');
+        if (credentials.username.length < 3) {
+            toast.error('Username must be at least 3 characters');
+            return;
+        }
+
+        if (credentials.password.length < 6) {
+            toast.error('Password must be at least 6 characters');
+            return;
+        }
+
         setLoading(true);
-
         try {
             await login(credentials);
             navigate('/dashboard');
-        } catch {
-            setAuthError('Invalid username or password');
+        } catch (error) {
+            console.error('Login failed:', error);
         } finally {
             setLoading(false);
         }
     };
 
-
-
-
-
-    const validate = () => {
-        const newErrors = {};
-
-        if (!credentials.username.trim()) {
-            newErrors.username = 'Username is required';
-        }
-
-        if (!credentials.password) {
-            newErrors.password = 'Password is required';
-        }
-
-        setErrors(newErrors);
-        return Object.keys(newErrors).length === 0;
-    };
-
     const handleUsernameChange = (e) => {
         setCredentials({ ...credentials, username: e.target.value });
-        setAuthError('');
     };
 
     const handlePasswordChange = (e) => {
         setCredentials({ ...credentials, password: e.target.value });
-        setAuthError('');
     };
-
 
     const isFormValid =
         credentials.username.trim().length > 0 &&
         credentials.password.trim().length > 0;
-
 
     return (
         <Box sx={{ position: 'relative', minHeight: '100vh', overflow: 'hidden' }}>
@@ -97,7 +82,6 @@ const Login = () => {
                     height: '100%',
                     objectFit: 'cover',
                     zIndex: -2,
-
                 }}
             >
                 <source
@@ -137,28 +121,18 @@ const Login = () => {
 
                         <Box
                             component="form"
-                            onSubmit={(e) => {
-                                e.preventDefault();   // 🔥 THIS STOPS THE REFRESH
-                                handleSubmit();
-                            }}
+                            onSubmit={handleSubmit}
+                            noValidate
                         >
-
-                        {/* Username */}
+                            {/* Username */}
                             <TextField
                                 fullWidth
                                 margin="normal"
                                 placeholder="Username"
                                 value={credentials.username}
                                 onChange={handleUsernameChange}
-                                onKeyDown={(e) => {
-                                    if (e.key === 'Enter') {
-                                        e.preventDefault();
-                                        if (isFormValid) handleSubmit();
-                                    }
-                                }}
                                 sx={inputStyles}
                             />
-
 
                             {/* Password */}
                             <TextField
@@ -168,17 +142,14 @@ const Login = () => {
                                 type={showPassword ? 'text' : 'password'}
                                 value={credentials.password}
                                 onChange={handlePasswordChange}
-                                onKeyDown={(e) => {
-                                    if (e.key === 'Enter') {
-                                        e.preventDefault();
-                                        if (isFormValid) handleSubmit();
-                                    }
-                                }}
                                 sx={inputStyles}
                                 InputProps={{
                                     endAdornment: (
                                         <InputAdornment position="end">
-                                            <IconButton onClick={() => setShowPassword(!showPassword)}>
+                                            <IconButton
+                                                onClick={() => setShowPassword(!showPassword)}
+                                                type="button"
+                                            >
                                                 {showPassword ? (
                                                     <VisibilityOff sx={{ color: 'white' }} />
                                                 ) : (
@@ -190,30 +161,12 @@ const Login = () => {
                                 }}
                             />
 
-                            {/* Error */}
-                            {authError && (
-                                <Typography
-                                    sx={{
-                                        mt: 2,
-                                        textAlign: 'center',
-                                        fontWeight: 700,
-                                        color: '#F87171',
-                                        background: 'rgba(0,0,0,0.55)',
-                                        borderRadius: 2,
-                                        py: 1,
-                                    }}
-                                >
-                                    {authError}
-                                </Typography>
-                            )}
-
                             {/* Button */}
                             <Button
                                 fullWidth
                                 size="large"
                                 type="submit"
                                 disabled={!isFormValid || loading}
-                                onClick={handleSubmit}
                                 sx={{
                                     mt: 3,
                                     py: 1.6,
@@ -231,7 +184,6 @@ const Login = () => {
                                 {loading ? 'Signing In...' : 'Sign In'}
                             </Button>
                         </Box>
-
 
                         {/* Footer */}
                         <Box sx={{ textAlign: 'center', mt: 2 }}>

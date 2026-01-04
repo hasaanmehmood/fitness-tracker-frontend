@@ -62,11 +62,24 @@ export const AuthProvider = ({ children }) => {
             toast.success(`Welcome back, ${username}!`);
             return response.data;
         } catch (error) {
-            const message = error.response?.data?.message || 'Login failed';
-            throw new Error(message);
-
+            const message = error.response?.data?.message || 'Invalid username or password';
+            toast.error(message);
+            throw error;
         }
     };
+
+    const updateUser = (updatedFields) => {
+        setUser((prevUser) => {
+            if (!prevUser) return prevUser;
+
+            const updatedUser = { ...prevUser, ...updatedFields };
+            localStorage.setItem('user', JSON.stringify(updatedUser));
+            return updatedUser;
+        });
+    };
+
+
+
 
     const register = async (userData) => {
         try {
@@ -92,9 +105,11 @@ export const AuthProvider = ({ children }) => {
         login,
         register,
         logout,
+        updateUser,
         isAuthenticated: !!user,
         loading,
     };
+
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

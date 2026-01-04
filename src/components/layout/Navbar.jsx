@@ -114,14 +114,12 @@ const Navbar = () => {
                     <IconButton onClick={handleMenuOpen} sx={{ ml: 1 }}>
                         <Avatar
                             sx={{
-                                width: 34,
-                                height: 34,
-                                fontWeight: 700,
-                                bgcolor: 'rgba(255,255,255,0.15)',
-                                color: '#E5E7EB',
-                                backdropFilter: 'blur(6px)',
-                                border: '1px solid rgba(255,255,255,0.25)',
+                                width: 32,
+                                height: 32,
+                                bgcolor: 'rgba(255,255,255,0.2)'
                             }}
+                            src={user?.profileImage ? `http://localhost:8080${user.profileImage}` : ''}
+                            imgProps={{ crossOrigin: 'anonymous' }}
                         >
                             {user?.username?.charAt(0).toUpperCase()}
                         </Avatar>
