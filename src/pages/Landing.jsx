@@ -1,6 +1,9 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, useScroll, useTransform } from 'framer-motion';
+import { useInView } from 'framer-motion';
+
+
 import {
     Box,
     Container,
@@ -25,6 +28,39 @@ import {
     CloudUpload,
     Menu as MenuIcon,
 } from '@mui/icons-material';
+
+
+
+const AnimatedCounter = ({ end, duration = 2 }) => {
+    const [count, setCount] = useState(0);
+    const ref = useRef(null);
+    const isInView = useInView(ref, { once: true });
+
+    useEffect(() => {
+        if (!isInView) return;
+
+        let startTime;
+        let animationFrame;
+
+        const animate = (timestamp) => {
+            if (!startTime) startTime = timestamp;
+            const progress = (timestamp - startTime) / (duration * 1000);
+
+            if (progress < 1) {
+                setCount(Math.floor(end * progress));
+                animationFrame = requestAnimationFrame(animate);
+            } else {
+                setCount(end);
+            }
+        };
+
+        animationFrame = requestAnimationFrame(animate);
+        return () => cancelAnimationFrame(animationFrame);
+    }, [isInView, end, duration]);
+
+    return <span ref={ref}>{count}</span>;
+};
+
 
 
 
@@ -79,10 +115,10 @@ const Landing = () => {
     ];
 
     const stats = [
-        { number: '50K+', label: 'Active Users', color: '#FF6B6B' },
-        { number: '1M+', label: 'Workouts Logged', color: '#4ECDC4' },
-        { number: '500+', label: 'Exercise Library', color: '#FFD93D' },
-        { number: '4.9★', label: 'App Rating', color: '#6BCF7F' },
+        { number: 50000, suffix: '+', label: 'Active Users', color: '#FF6B6B' },
+        { number: 1000000, suffix: '+', label: 'Workouts Logged', color: '#4ECDC4' },
+        { number: 500, suffix: '+', label: 'Exercise Library', color: '#FFD93D' },
+        { number: 4.9, suffix: '★', label: 'App Rating', color: '#6BCF7F' },
     ];
 
     const testimonials = [
@@ -341,8 +377,11 @@ const Landing = () => {
             </Box>
 
             {/* Stats Section */}
-            <Container maxWidth="lg" sx={{ py: 8, mt: -8, position: 'relative', zIndex: 2 }}>
-                <Grid container spacing={3}>
+            <Container maxWidth="lg" sx={{ py: 8, mt: -8, position: 'relative', zIndex: 2 ,pt: 16}}>
+                <Grid container spacing={3}  container
+                      spacing={3}
+                      justifyContent="center"
+                      alignItems="center" >
                     {stats.map((stat, index) => (
                         <Grid item xs={6} md={3} key={index}>
                             <motion.div
@@ -361,15 +400,19 @@ const Landing = () => {
                                     }}
                                 >
                                     <Typography variant="h3" sx={{ fontWeight: 900, mb: 1 }}>
-                                        {stat.number}
+                                        <AnimatedCounter end={stat.number} />
+                                        {stat.suffix}
                                     </Typography>
-                                    <Typography sx={{ fontWeight: 600 }}>{stat.label}</Typography>
+                                    <Typography sx={{ fontWeight: 600 }}>
+                                        {stat.label}
+                                    </Typography>
                                 </Card>
                             </motion.div>
                         </Grid>
                     ))}
                 </Grid>
             </Container>
+
 
             {/* Features Section */}
             <Box sx={{ bgcolor: '#F9FAFB', py: 12 }}>
