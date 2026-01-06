@@ -1,9 +1,6 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
+import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { useInView } from 'framer-motion';
-
-
 import {
     Box,
     Container,
@@ -23,15 +20,11 @@ import {
     Restaurant,
     EmojiEvents,
     People,
-    Speed,
-    Security,
     CloudUpload,
     Menu as MenuIcon,
 } from '@mui/icons-material';
 
-
-
-const AnimatedCounter = ({ end, duration = 2 }) => {
+const AnimatedCounter = ({ end, suffix = '', duration = 2 }) => {
     const [count, setCount] = useState(0);
     const ref = useRef(null);
     const isInView = useInView(ref, { once: true });
@@ -56,17 +49,17 @@ const AnimatedCounter = ({ end, duration = 2 }) => {
 
         animationFrame = requestAnimationFrame(animate);
         return () => cancelAnimationFrame(animationFrame);
+
     }, [isInView, end, duration]);
 
-    return <span ref={ref}>{count}</span>;
+    return <span ref={ref}>{count}{suffix}</span>;
 };
-
-
-
 
 const Landing = () => {
     const navigate = useNavigate();
     const heroRef = useRef(null);
+    const [currentTestimonial, setCurrentTestimonial] = useState(0);
+
     const { scrollYProgress } = useScroll({
         target: heroRef,
         offset: ['start start', 'end start'],
@@ -115,9 +108,9 @@ const Landing = () => {
     ];
 
     const stats = [
-        { number: 50000, suffix: '+', label: 'Active Users', color: '#FF6B6B' },
-        { number: 1000000, suffix: '+', label: 'Workouts Logged', color: '#4ECDC4' },
-        { number: 500, suffix: '+', label: 'Exercise Library', color: '#FFD93D' },
+        { number: 50, suffix: 'K+', label: 'Active Users', color: '#C98986' },
+        { number: 1, suffix: 'M+', label: 'Workouts Logged', color: '#4ECDC4' },
+        { number: 500, suffix: '+', label: 'Exercise Library', color: 'rgba(155, 155, 127, 0.75)' },
         { number: 4.9, suffix: '★', label: 'App Rating', color: '#6BCF7F' },
     ];
 
@@ -145,13 +138,18 @@ const Landing = () => {
         },
     ];
 
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
+        }, 5000);
+        return () => clearInterval(interval);
+    }, [testimonials.length]);
+
     return (
         <Box sx={{ overflow: 'hidden' }}>
-            {/* Navigation */}
             <AppBar
                 position="fixed"
-                enableColorOnDark
-                color="transparent"
+                elevation={0}
                 sx={{
                     color: '#f3f4f6',
                     backgroundColor: 'rgba(15, 23, 42, 0.25) !important',
@@ -160,34 +158,32 @@ const Landing = () => {
                     borderBottom: '1px solid rgba(255,255,255,0.18)',
                     boxShadow: '0 12px 30px rgba(0,0,0,0.35)',
 
+                    zIndex: 9999,
                 }}
             >
-
-            <Toolbar>
+                <Toolbar>
                     <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
-                        <FitnessCenter sx={{ fontSize: 32, color: 'yellow', mr: 1 }} />
-                        <Typography variant="h6" sx={{ fontWeight: 800, color: '#f3f4f6' }}>
-                            FitTrack.
+                        <FitnessCenter sx={{ fontSize: 32, color: '#ffff7f', mr: 1 }} />
+                        <Typography variant="h6" sx={{ fontWeight: 800, color: 'rgba(255,255,255,0.9)' }}>
+                            FitTrack
                         </Typography>
                     </Box>
                     <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 3 }}>
-                        <Button sx={{ color: '#f3f4f6', fontWeight: 600 }}>Features</Button>
-                        <Button sx={{ color: '#f3f4f6', fontWeight: 600 }}>Pricing</Button>
-                        <Button sx={{ color: '#f3f4f6', fontWeight: 600 }}>About</Button>
+                        <Button sx={{ color: 'rgba(255,255,255,0.9)', fontWeight: 600 }}>Features</Button>
+                        <Button sx={{ color: 'rgba(255,255,255,0.9)', fontWeight: 600 }}>Pricing</Button>
+                        <Button sx={{ color: 'rgba(255,255,255,0.9)', fontWeight: 600 }}>About</Button>
                     </Box>
                     <Box sx={{ ml: 3, display: 'flex', gap: 2 }}>
                         <Button
                             variant="outlined"
                             onClick={() => navigate('/login')}
                             sx={{
-                                borderColor: '#FFD93D',
-                                color: '#FFD93D',
+                                borderColor: '#FFFF7F',
+                                color: '#FFFF7F',
                                 fontWeight: 600,
-                                borderWidth: 2,
                                 '&:hover': {
-                                    borderColor: '#FFC929',
-                                    bgcolor: 'rgba(255,217,61,0.15)',
-                                    borderWidth: 2,
+                                    borderColor: '#FFFF7F',
+                                    bgcolor: 'rgba(255, 255, 127, 0.15)', // yellow tint
                                 },
                             }}
                         >
@@ -198,18 +194,20 @@ const Landing = () => {
                             variant="contained"
                             onClick={() => navigate('/register')}
                             sx={{
-                                bgcolor: '#FFD93D',
-                                color: '#1F2937',
-                                fontWeight: 700,
-                                boxShadow: '0 6px 24px rgba(255,217,61,0.45)',
+                                bgcolor: 'rgba(255, 255, 127, 0.75)',
+                                color: '#000',
+                                fontWeight: 600,
+                                transition: 'all 0.2s ease',
                                 '&:hover': {
-                                    bgcolor: '#FFC929',
-                                    boxShadow: '0 10px 32px rgba(255,217,61,0.6)',
+                                    bgcolor: 'rgba(0, 0, 0, 0.45)', // added transparency
+                                    color: '#FFFF7F',
                                 },
                             }}
                         >
                             Get Started
                         </Button>
+
+
 
                     </Box>
                     <IconButton sx={{ ml: 2, display: { xs: 'flex', md: 'none' } }}>
@@ -218,57 +216,55 @@ const Landing = () => {
                 </Toolbar>
             </AppBar>
 
-            {/* Hero Section */}
             <Box
                 ref={heroRef}
                 sx={{
-                    minHeight: '100vh',
                     position: 'relative',
+                    height: '100vh',
                     overflow: 'hidden',
-                    display: 'flex',
-                    alignItems: 'center',
-
                 }}
             >
-
-
-            <Box
-                    sx={{
-                        position: 'absolute',
-                        inset: 0,
-                        background: 'rgba(255,255,255,0.12)',
-                        border: '1px solid rgba(255,255,255,0.25)',
-                        backdropFilter: 'blur(15px)',
-
-                    }}
-                />
-
-                <video
+                <Box
+                    component="video"
                     autoPlay
                     muted
                     loop
                     playsInline
-                    preload="auto"
-                    style={{
+                    sx={{
                         position: 'absolute',
                         inset: 0,
                         width: '100%',
                         height: '100%',
                         objectFit: 'cover',
-                        zIndex: 0,
                     }}
                 >
                     <source
                         src="https://assets.mixkit.co/videos/42898/42898-720.mp4"
                         type="video/mp4"
                     />
-                </video>
+                </Box>
 
-                <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1 }}>
-                    <Grid container spacing={6}>
+                <Box
+                    sx={{
+                        position: 'absolute',
+                        inset: 0,
+                        bgcolor: 'rgba(0,0,0,0.4)',
+                    }}
+                />
+
+                <Container
+                    maxWidth="lg"
+                    sx={{
+                        position: 'relative',
+                        zIndex: 1,
+                        height: '100%',
+                        display: 'flex',
+                        alignItems: 'center',
+                    }}
+                >
+                    <Grid container spacing={6} alignItems="center">
                         <Grid item xs={12} md={6}>
                             <motion.div
-                                style={{ y, opacity }}
                                 initial={{ opacity: 0, x: -50 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 transition={{ duration: 0.8 }}
@@ -284,138 +280,103 @@ const Landing = () => {
                                 >
                                     Your Fitness
                                     <br />
-                                    <span style={{ color: '#FFD93D' }}>Journey Starts</span>
+                                    <span style={{ color: 'rgba(255, 255, 127, 0.75)' }}>Journey Starts</span>
                                     <br />
                                     Here.
                                 </Typography>
 
-                                <Typography
-                                    variant="h5"
-                                    sx={{
-                                        color: 'rgba(255,255,255,0.9)',
-                                        mb: 4,
-                                        fontWeight: 400,
-                                    }}
-                                >
+                                <Typography variant="h5" sx={{ color: 'rgba(255,255,255,0.9)', mb: 4, fontWeight: 400 }}>
                                     Track workouts, monitor progress, achieve your goals.
                                     The most powerful fitness tracking app designed for your success.
                                 </Typography>
 
                                 <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
-                                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                                        <Button
-                                            variant="contained"
-                                            size="large"
-                                            onClick={() => navigate('/register')}
-                                            sx={{
-                                                bgcolor: '#FFD93D',
-                                                color: '#1F2937',
-                                                px: 5,
-                                                py: 2,
-                                                fontSize: '1.2rem',
-                                                fontWeight: 700,
-                                                boxShadow: '0 8px 32px rgba(255,217,61,0.4)',
-                                                '&:hover': {
-                                                    bgcolor: '#FFC929',
-                                                    transform: 'translateY(-2px)',
-                                                },
-                                            }}
-                                        >
-                                            Start Free Trial
-                                        </Button>
-                                    </motion.div>
+                                    <Button
+                                        component={motion.button}
+                                        whileHover={{ scale: 1.05 }}
+                                        whileTap={{ scale: 0.95 }}
+                                        variant="contained"
+                                        size="large"
+                                        onClick={() => navigate('/register')}
+                                        sx={{
+                                            bgcolor: 'rgba(255, 255, 127, 0.75)',
+                                            color: '#1F2937',
+                                            px: 5,
+                                            py: 2,
+                                            fontSize: '1.2rem',
+                                            fontWeight: 700,
+                                            boxShadow: '0 8px 32px rgba(255,217,61,0.4)',
+                                            '&:hover': { bgcolor: 'rgba(255, 255, 127, 0.75)' },
+                                        }}
+                                    >
+                                        Start
+                                    </Button>
 
-                                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                                        <Button
-                                            variant="outlined"
-                                            size="large"
-                                            onClick={() => ('/about')}
-                                            sx={{
-                                                borderColor: 'white',
-                                                color: 'white',
-                                                px: 5,
-                                                py: 2,
-                                                fontSize: '1.2rem',
-                                                fontWeight: 700,
-                                                borderWidth: 2,
-                                                '&:hover': {
-                                                    borderColor: 'white',
-                                                    bgcolor: 'rgba(255,255,255,0.1)',
-                                                    borderWidth: 2,
-                                                },
-                                            }}
-                                        >
-                                            Watch Demo
-                                        </Button>
-                                    </motion.div>
-                                </Box>
 
-                                <Box sx={{ display: 'flex', gap: 4, mt: 5, alignItems: 'center' }}>
-                                    <Box>
-                                        <Typography sx={{ fontSize: '2rem', fontWeight: 800, color: 'white' }}>
-                                            50K+
-                                        </Typography>
-                                        <Typography sx={{ color: 'rgba(255,255,255,0.8)' }}>
-                                            Active Users
-                                        </Typography>
-                                    </Box>
-                                    <Box>
-                                        <Typography sx={{ fontSize: '2rem', fontWeight: 800, color: 'white' }}>
-                                            4.9★
-                                        </Typography>
-                                        <Typography sx={{ color: 'rgba(255,255,255,0.8)' }}>
-                                            App Rating
-                                        </Typography>
-                                    </Box>
                                 </Box>
                             </motion.div>
                         </Grid>
-
-
                     </Grid>
                 </Container>
             </Box>
 
-            {/* Stats Section */}
-            <Container maxWidth="lg" sx={{ py: 8, mt: -8, position: 'relative', zIndex: 2 ,pt: 16}}>
-                <Grid container spacing={3}  container
-                      spacing={3}
-                      justifyContent="center"
-                      alignItems="center" >
-                    {stats.map((stat, index) => (
-                        <Grid item xs={6} md={3} key={index}>
-                            <motion.div
-                                initial={{ opacity: 0, y: 30 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.5, delay: index * 0.1 }}
-                                viewport={{ once: true }}
-                            >
-                                <Card
-                                    sx={{
-                                        bgcolor: stat.color,
-                                        color: 'white',
-                                        textAlign: 'center',
-                                        p: 3,
-                                        boxShadow: '0 10px 40px rgba(0,0,0,0.15)',
-                                    }}
+            <motion.div
+                initial={{ backgroundColor: '#ffffff' }}
+                whileInView={{ backgroundColor: '#000000' }}
+                transition={{ duration: 1.8, ease: 'easeOut' }}
+                viewport={{ amount: 0.4 }} // trigger when 30% visible
+            >
+                <Container
+                    maxWidth="lg"
+                    sx={{
+                        py: 8,
+                        mt: -8,
+                        pt: 12,
+                        position: 'relative',
+                        zIndex: 2,
+                    }}
+                >
+                    <Grid
+                        container
+                        spacing={3}
+                        justifyContent="center"
+                        alignItems="stretch"
+                    >
+                        {stats.map((stat, index) => (
+                            <Grid item xs={6} md={3} key={index}>
+                                <motion.div
+                                    initial={{ opacity: 0, y: 30 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                                    viewport={{ once: true }}
                                 >
-                                    <Typography variant="h3" sx={{ fontWeight: 900, mb: 1 }}>
-                                        <AnimatedCounter end={stat.number} />
-                                        {stat.suffix}
-                                    </Typography>
-                                    <Typography sx={{ fontWeight: 600 }}>
-                                        {stat.label}
-                                    </Typography>
-                                </Card>
-                            </motion.div>
-                        </Grid>
-                    ))}
-                </Grid>
-            </Container>
+                                    <Card
+                                        sx={{
+                                            bgcolor: stat.color,
+                                            color: 'white',
+                                            textAlign: 'center',
+                                            p: 3,
+                                            boxShadow: '0 10px 40px rgba(0,0,0,0.15)',
+                                        }}
+                                    >
+                                        <Typography variant="h3" sx={{ fontWeight: 900, mb: 1 }}>
+                                            <AnimatedCounter
+                                                end={stat.number}
+                                                suffix={stat.suffix}
+                                            />
+                                        </Typography>
+                                        <Typography sx={{ fontWeight: 600 }}>
+                                            {stat.label}
+                                        </Typography>
+                                    </Card>
+                                </motion.div>
+                            </Grid>
+                        ))}
+                    </Grid>
+                </Container>
 
 
-            {/* Features Section */}
-            <Box sx={{ bgcolor: '#F9FAFB', py: 12 }}>
+
                 <Container maxWidth="lg">
                     <Box sx={{ textAlign: 'center', mb: 8 }}>
                         <Typography
@@ -423,14 +384,22 @@ const Landing = () => {
                             sx={{
                                 fontWeight: 900,
                                 mb: 2,
-                                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                                color: 'rgba(255,255,127,0.95)', // Firefox fallback
+                                background: `
+                                        linear-gradient(
+                                            135deg,
+                                            rgba(255,255,127,1) 0%,
+                                            rgba(220,220,70,0.8) 60%,
+                                            rgba(180,180,40,0.65) 100%
+                                        )
+                                    `,
                                 WebkitBackgroundClip: 'text',
                                 WebkitTextFillColor: 'transparent',
                             }}
                         >
                             Powerful Features
                         </Typography>
-                        <Typography variant="h6" color="text.secondary">
+                        <Typography variant="h6" color="grey">
                             Everything you need to crush your fitness goals
                         </Typography>
                     </Box>
@@ -439,38 +408,56 @@ const Landing = () => {
                         {features.map((feature, index) => (
                             <Grid item xs={12} sm={6} md={4} key={index}>
                                 <motion.div
-                                    initial={{ opacity: 0, y: 30 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                                    initial={{ opacity: 0, rotateY: -45, scale: 0.8 }}
+                                    whileInView={{ opacity: 1, rotateY: 0, scale: 1 }}
+                                    transition={{ duration: 0.6, delay: index * 0.15 }}
                                     viewport={{ once: true }}
-                                    whileHover={{ y: -10 }}
+                                    whileHover={{
+                                        y: -15,
+                                        rotateZ: 2,
+                                        transition: { duration: 0.3 }
+                                    }}
+                                    style={{ transformStyle: 'preserve-3d' }}
                                 >
                                     <Card
                                         sx={{
                                             height: '100%',
                                             borderTop: `4px solid ${feature.color}`,
                                             transition: 'all 0.3s',
+                                            transform: 'perspective(1000px)',
                                             '&:hover': {
                                                 boxShadow: `0 20px 40px ${feature.color}40`,
                                             },
                                         }}
                                     >
                                         <CardContent sx={{ p: 4 }}>
-                                            <Box
-                                                sx={{
-                                                    width: 80,
-                                                    height: 80,
-                                                    borderRadius: 3,
-                                                    bgcolor: `${feature.color}20`,
-                                                    color: feature.color,
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    justifyContent: 'center',
-                                                    mb: 3,
+                                            <motion.div
+                                                animate={{
+                                                    y: [0, -10, 0],
+                                                    rotate: [0, 5, 0, -5, 0]
+                                                }}
+                                                transition={{
+                                                    duration: 4,
+                                                    repeat: Infinity,
+                                                    ease: "easeInOut"
                                                 }}
                                             >
-                                                {feature.icon}
-                                            </Box>
+                                                <Box
+                                                    sx={{
+                                                        width: 80,
+                                                        height: 80,
+                                                        borderRadius: 3,
+                                                        bgcolor: `${feature.color}20`,
+                                                        color: feature.color,
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center',
+                                                        mb: 3,
+                                                    }}
+                                                >
+                                                    {feature.icon}
+                                                </Box>
+                                            </motion.div>
                                             <Typography variant="h5" sx={{ fontWeight: 700, mb: 2 }}>
                                                 {feature.title}
                                             </Typography>
@@ -484,88 +471,147 @@ const Landing = () => {
                         ))}
                     </Grid>
                 </Container>
-            </Box>
 
-            {/* Testimonials */}
+
             <Container maxWidth="lg" sx={{ py: 12 }}>
                 <Box sx={{ textAlign: 'center', mb: 8 }}>
-                    <Typography variant="h2" sx={{ fontWeight: 900, mb: 2 }}>
-                        Loved by Thousands
+                    <Typography color="grey" variant="h2" sx={{ fontWeight: 900, mb: 2 }}>
+                        Loved by Thousands!
                     </Typography>
-                    <Typography variant="h6" color="text.secondary">
+                    <Typography variant="h6" color="grey">
                         See what our users say about FitTrack
                     </Typography>
                 </Box>
 
-                <Grid container spacing={4}>
+                <Box sx={{ position: 'relative', minHeight: 300, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                     {testimonials.map((testimonial, index) => (
-                        <Grid item xs={12} md={4} key={index}>
-                            <motion.div
-                                initial={{ opacity: 0, scale: 0.9 }}
-                                whileInView={{ opacity: 1, scale: 1 }}
-                                transition={{ duration: 0.5, delay: index * 0.1 }}
-                                viewport={{ once: true }}
+                        <motion.div
+                            key={index}
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            animate={{
+                                opacity: currentTestimonial === index ? 1 : 0,
+                                scale: currentTestimonial === index ? 1 : 0.8,
+                                x: currentTestimonial === index ? 0 : 100
+                            }}
+                            transition={{ duration: 0.5 }}
+                            style={{
+                                position: 'absolute',
+                                width: '100%',
+                                maxWidth: 600,
+                            }}
+                        >
+                            <Card
+                                sx={{
+                                    borderLeft: `4px solid ${testimonial.color}`,
+                                    p: 4,
+                                }}
                             >
-                                <Card
-                                    sx={{
-                                        height: '100%',
-                                        borderLeft: `4px solid ${testimonial.color}`,
-                                        p: 3,
-                                    }}
-                                >
-                                    <CardContent>
-                                        <Typography sx={{ mb: 3, fontSize: '1.1rem', lineHeight: 1.8 }}>
-                                            "{testimonial.text}"
-                                        </Typography>
-                                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                                            <Avatar src={testimonial.image} sx={{ width: 56, height: 56 }} />
-                                            <Box>
-                                                <Typography sx={{ fontWeight: 700 }}>
-                                                    {testimonial.name}
-                                                </Typography>
-                                                <Typography color="text.secondary" variant="body2">
-                                                    {testimonial.role}
-                                                </Typography>
-                                            </Box>
+                                <CardContent>
+                                    <Typography sx={{ mb: 3, fontSize: '1.3rem', lineHeight: 1.8, fontStyle: 'italic' }}>
+                                        "{testimonial.text}"
+                                    </Typography>
+                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                                        <Avatar src={testimonial.image} sx={{ width: 64, height: 64 }} />
+                                        <Box>
+                                            <Typography sx={{ fontWeight: 700, fontSize: '1.1rem' }}>
+                                                {testimonial.name}
+                                            </Typography>
+                                            <Typography color="text.secondary">
+                                                {testimonial.role}
+                                            </Typography>
                                         </Box>
-                                    </CardContent>
-                                </Card>
-                            </motion.div>
-                        </Grid>
+                                    </Box>
+                                </CardContent>
+                            </Card>
+                        </motion.div>
                     ))}
-                </Grid>
-            </Container>
+                </Box>
 
-            {/* CTA Section */}
+                <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, mt: 4 }}>
+                    {testimonials.map((_, index) => (
+                        <Box
+                            key={index}
+                            onClick={() => setCurrentTestimonial(index)}
+                            sx={{
+                                width: 12,
+                                height: 12,
+                                borderRadius: '50%',
+                                bgcolor: currentTestimonial === index ? '#667eea' : '#D1D5DB',
+                                cursor: 'pointer',
+                                transition: 'all 0.3s',
+                            }}
+                        />
+                    ))}
+                </Box>
+            </Container>
+            </motion.div>
             <Box
                 sx={{
-                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                    position: 'relative',
                     py: 12,
                     color: 'white',
+
                     textAlign: 'center',
+                    overflow: 'hidden',
                 }}
             >
-                <Container maxWidth="md">
-                    <Typography variant="h2" sx={{ fontWeight: 900, mb: 3 }}>
-                        Ready to Transform?
-                    </Typography>
-                    <Typography variant="h6" sx={{ mb: 4, opacity: 0.9 }}>
-                        Join 50,000+ users already crushing their fitness goals
-                    </Typography>
-                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Box
+                    component="video"
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    sx={{
+                        position: 'absolute',
+                        inset: 0,
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        zIndex: 0,
+                    }}
+                >
+                    <source
+                        src="https://videos.pexels.com/video-files/30875209/30875209-hd_1920_1080_30fps.mp4"
+                        type="video/mp4"
+                    />
+                </Box>
+                <Box
+                    sx={{
+                        position: 'absolute',
+                        inset: 0,
+                        bgcolor: 'rgba(0,0,0,0.5)',
+                        zIndex: 0,
+                    }}
+                />
+                <Container maxWidth="md" sx={{ position: 'relative', zIndex: 1 }}>
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.6 }}
+                        viewport={{ once: true }}
+                    >
+                        <Typography variant="h2" sx={{ fontWeight: 900, mb: 3 }}>
+                            Ready to Transform?
+                        </Typography>
+                        <Typography variant="h6" sx={{ mb: 4, opacity: 0.9 }}>
+                            Join 50,000+ users already crushing their fitness goals
+                        </Typography>
                         <Button
+                            component={motion.button}
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
                             variant="contained"
                             size="large"
                             onClick={() => navigate('/register')}
                             sx={{
-                                bgcolor: '#FFD93D',
+                                bgcolor: 'rgba(255, 255, 127, 0.75)',
                                 color: '#1F2937',
                                 px: 6,
                                 py: 2,
                                 fontSize: '1.3rem',
                                 fontWeight: 700,
                                 boxShadow: '0 8px 32px rgba(255,217,61,0.4)',
-                                '&:hover': { bgcolor: '#FFC929' },
+                                '&:hover': { bgcolor: 'rgba(255, 255, 127, 0.75)' },
                             }}
                         >
                             Start Your Free Trial
@@ -574,15 +620,14 @@ const Landing = () => {
                 </Container>
             </Box>
 
-            {/* Footer */}
             <Box sx={{ bgcolor: '#1F2937', color: 'white', py: 6 }}>
                 <Container maxWidth="lg">
                     <Grid container spacing={4}>
                         <Grid item xs={12} md={4}>
                             <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                                <FitnessCenter sx={{ fontSize: 32, color: 'yellow', mr: 1 }} />
+                                <FitnessCenter sx={{ fontSize: 32, color: '#ffff7f  ', mr: 1 }} />
                                 <Typography variant="h6" sx={{ fontWeight: 800 }}>
-                                    FitTrack.
+                                    FitTrack
                                 </Typography>
                             </Box>
                             <Typography color="rgba(255,255,255,0.7)">
@@ -610,7 +655,7 @@ const Landing = () => {
                     </Grid>
                     <Box sx={{ textAlign: 'center', mt: 4, pt: 4, borderTop: '1px solid rgba(255,255,255,0.1)' }}>
                         <Typography color="rgba(255,255,255,0.5)">
-                            © 2026 FitTrack. All rights reserved.
+                            © 2024 FitTrack. All rights reserved.
                         </Typography>
                     </Box>
                 </Container>
