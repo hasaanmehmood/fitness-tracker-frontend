@@ -567,20 +567,25 @@ const Landing = () => {
                         width: '100%',
                         height: '100%',
                         objectFit: 'cover',
+                        bgcolor: 'rgba(0,0,0,0.8)',
                         zIndex: 0,
                     }}
                 >
                     <source
-                        src="https://videos.pexels.com/video-files/30875209/30875209-hd_1920_1080_30fps.mp4"
+                        src="https://assets.mixkit.co/videos/44882/44882-720.mp4"
                         type="video/mp4"
                     />
                 </Box>
                 <Box
                     sx={{
                         position: 'absolute',
-                        inset: 0,
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
                         bgcolor: 'rgba(0,0,0,0.5)',
-                        zIndex: 0,
+                        pointerEvents: 'none',
+
                     }}
                 />
                 <Container maxWidth="md" sx={{ position: 'relative', zIndex: 1 }}>
@@ -655,7 +660,7 @@ const Landing = () => {
                     </Grid>
                     <Box sx={{ textAlign: 'center', mt: 4, pt: 4, borderTop: '1px solid rgba(255,255,255,0.1)' }}>
                         <Typography color="rgba(255,255,255,0.5)">
-                            © 2024 FitTrack. All rights reserved.
+                            © 2026 FitTrack. All rights reserved.
                         </Typography>
                     </Box>
                 </Container>
