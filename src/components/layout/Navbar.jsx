@@ -81,7 +81,7 @@ const Navbar = () => {
                         sx={{
                             fontWeight: 700,
                             letterSpacing: '-0.3px',
-                            color: '#f3f4f6',
+                            color: '#A9A9A9',
                         }}
                     >
                         Fitness Tracker
@@ -97,7 +97,7 @@ const Navbar = () => {
                         startIcon={<Dashboard />}
                         onClick={() => navigate('/dashboard')}
                         sx={{
-                            color: 'grey',
+                            color: '#A9A9A9',
                             fontWeight: 500,
                             textTransform: 'none',
                             px: 2,

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { workoutAPI } from '../services/api';
+import { userAPI } from '../services/api';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 import {
@@ -32,12 +33,29 @@ import {
 } from '@mui/icons-material';
 import { format } from 'date-fns';
 
+
+
 const Dashboard = () => {
     const [workouts, setWorkouts] = useState([]);
     const [filteredWorkouts, setFilteredWorkouts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedIntensity, setSelectedIntensity] = useState('ALL');
+    const [profile, setProfile] = useState(null);
+
+    useEffect(() => {
+        loadProfile();
+    }, []);
+
+    const loadProfile = async () => {
+        try {
+            const response = await userAPI.getProfile();
+            setProfile(response.data);
+        } catch (error) {
+            console.error('Load profile error:', error);
+            toast.error('Failed to load profile');
+        }
+    };
     const navigate = useNavigate();
 
     const colors = {
@@ -57,6 +75,8 @@ const Dashboard = () => {
         filterWorkouts();
     }, [searchQuery, selectedIntensity, workouts]);
 
+
+
     const loadWorkouts = async () => {
         try {
             const response = await workoutAPI.getAll();
@@ -68,6 +88,7 @@ const Dashboard = () => {
             setLoading(false);
         }
     };
+
 
     const filterWorkouts = () => {
         let filtered = workouts;
@@ -132,6 +153,7 @@ const Dashboard = () => {
     const weeklyGoal = 150; // minutes per week
     const weeklyProgress = (stats.totalMinutes / weeklyGoal) * 100;
 
+
     if (loading) {
         return (
             <Box
@@ -153,7 +175,7 @@ const Dashboard = () => {
                 {/* Header */}
                 <Box sx={{ mb: 4 }}>
                     <Typography variant="h3" sx={{ fontWeight: 900, mb: 1, color: '#1F2937' }}>
-                        My Dashboard
+                        {profile?.username ? `${profile.username.charAt(0).toUpperCase() + profile.username.slice(1)}'s Dashboard` : 'My Dashboard'}
                     </Typography>
                     <Typography variant="h6" color="text.secondary">
                         Track your progress and stay motivated! 💪
