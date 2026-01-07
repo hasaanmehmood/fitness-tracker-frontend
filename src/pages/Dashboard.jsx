@@ -4,6 +4,7 @@ import { workoutAPI } from '../services/api';
 import { userAPI } from '../services/api';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
+import { useAuth } from '../context/AuthContext';
 import {
     Container,
     Grid,
@@ -36,13 +37,14 @@ import { format } from 'date-fns';
 
 
 const Dashboard = () => {
+
     const [workouts, setWorkouts] = useState([]);
     const [filteredWorkouts, setFilteredWorkouts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedIntensity, setSelectedIntensity] = useState('ALL');
     const [profile, setProfile] = useState(null);
-
+    const { updateUser } = useAuth();
     useEffect(() => {
         loadProfile();
     }, []);
@@ -51,11 +53,21 @@ const Dashboard = () => {
         try {
             const response = await userAPI.getProfile();
             setProfile(response.data);
+
+            // Update the global auth context with profile data
+            updateUser({
+                profileImage: response.data.profileImage,
+                fullName: response.data.fullName,
+                username: response.data.username
+            });
         } catch (error) {
             console.error('Load profile error:', error);
             toast.error('Failed to load profile');
         }
     };
+
+
+
     const navigate = useNavigate();
 
     const colors = {
