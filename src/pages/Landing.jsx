@@ -545,16 +545,14 @@ const Landing = () => {
                 </Box>
             </Container>
             </motion.div>
+            {/* CTA and Footer with continuous video background */}
             <Box
                 sx={{
                     position: 'relative',
-                    py: 12,
-                    color: 'white',
-
-                    textAlign: 'center',
                     overflow: 'hidden',
                 }}
             >
+                {/* Video Background - spans entire component */}
                 <Box
                     component="video"
                     autoPlay
@@ -567,7 +565,6 @@ const Landing = () => {
                         width: '100%',
                         height: '100%',
                         objectFit: 'cover',
-                        bgcolor: 'rgba(0,0,0,0.8)',
                         zIndex: 0,
                     }}
                 >
@@ -576,6 +573,8 @@ const Landing = () => {
                         type="video/mp4"
                     />
                 </Box>
+
+                {/* Dark overlay */}
                 <Box
                     sx={{
                         position: 'absolute',
@@ -585,85 +584,176 @@ const Landing = () => {
                         bottom: 0,
                         bgcolor: 'rgba(0,0,0,0.5)',
                         pointerEvents: 'none',
-
+                        zIndex: 1,
                     }}
                 />
-                <Container maxWidth="md" sx={{ position: 'relative', zIndex: 1 }}>
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.6 }}
-                        viewport={{ once: true }}
-                    >
-                        <Typography variant="h2" sx={{ fontWeight: 900, mb: 3 }}>
-                            Ready to Transform?
-                        </Typography>
-                        <Typography variant="h6" sx={{ mb: 4, opacity: 0.9 }}>
-                            Join 50,000+ users already crushing their fitness goals
-                        </Typography>
-                        <Button
-                            component={motion.button}
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            variant="contained"
-                            size="large"
-                            onClick={() => navigate('/register')}
+
+                {/* CTA Section */}
+                <Box
+                    sx={{
+                        position: 'relative',
+                        py: 12,
+                        color: 'white',
+                        textAlign: 'center',
+                        zIndex: 2,
+                    }}
+                >
+                    <Container maxWidth="md">
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            whileInView={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.6 }}
+                            viewport={{ once: true }}
+                        >
+                            <Typography variant="h2" sx={{ fontWeight: 900, mb: 3 }}>
+                                Ready to Transform?
+                            </Typography>
+                            <Typography variant="h6" sx={{ mb: 4, opacity: 0.9 }}>
+                                Join 50,000+ users already crushing their fitness goals
+                            </Typography>
+                            <Button
+                                component={motion.button}
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                variant="contained"
+                                size="large"
+                                onClick={() => navigate('/register')}
+                                sx={{
+                                    bgcolor: 'rgba(255, 255, 127, 0.75)',
+                                    color: '#1F2937',
+                                    px: 6,
+                                    py: 2,
+                                    fontSize: '1.3rem',
+                                    fontWeight: 700,
+                                    boxShadow: '0 8px 32px rgba(255,217,61,0.4)',
+                                    '&:hover': { bgcolor: 'rgba(255, 255, 127, 0.85)' },
+                                }}
+                            >
+                                Start Your Free Trial
+                            </Button>
+                        </motion.div>
+                    </Container>
+                </Box>
+
+                {/* Footer Section with Glassmorphism */}
+                <Box
+                    sx={{
+                        position: 'relative',
+                        color: 'white',
+                        py: 6,
+                        zIndex: 2,
+                        // Apple-style glass effect
+                        backdropFilter: 'blur(25px) saturate(180%)',
+                        WebkitBackdropFilter: 'blur(25px) saturate(180%)',
+                        backgroundColor: 'rgba(15, 23, 42, 0.25) !important',
+                        borderBottom: '1px solid rgba(255,255,255,0.18)',
+                        boxShadow: '0 12px 30px rgba(0,0,0,0.35)',
+                    }}
+                >
+                    <Container maxWidth="lg">
+                        <Grid container spacing={4}>
+                            <Grid item xs={12} md={4}>
+                                <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                                    <FitnessCenter sx={{ fontSize: 32, color: '#ffff7f', mr: 1 }} />
+                                    <Typography variant="h6" sx={{ fontWeight: 800 }}>
+                                        FitTrack
+                                    </Typography>
+                                </Box>
+                                <Typography color="rgba(255,255,255,0.8)">
+                                    Your ultimate fitness tracking companion
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={6} md={2}>
+                                <Typography sx={{ fontWeight: 700, mb: 2 }}>Product</Typography>
+                                <Typography
+                                    color="rgba(255,255,255,0.8)"
+                                    sx={{
+                                        mb: 1,
+                                        cursor: 'pointer',
+                                        '&:hover': { color: '#ffff7f' },
+                                        transition: 'color 0.3s'
+                                    }}
+                                >
+                                    Features
+                                </Typography>
+                                <Typography
+                                    color="rgba(255,255,255,0.8)"
+                                    sx={{
+                                        mb: 1,
+                                        cursor: 'pointer',
+                                        '&:hover': { color: '#ffff7f' },
+                                        transition: 'color 0.3s'
+                                    }}
+                                >
+                                    Pricing
+                                </Typography>
+                                <Typography
+                                    color="rgba(255,255,255,0.8)"
+                                    sx={{
+                                        cursor: 'pointer',
+                                        '&:hover': { color: '#ffff7f' },
+                                        transition: 'color 0.3s'
+                                    }}
+                                >
+                                    Support
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={6} md={2}>
+                                <Typography sx={{ fontWeight: 700, mb: 2 }}>Company</Typography>
+                                <Typography
+                                    color="rgba(255,255,255,0.8)"
+                                    sx={{
+                                        mb: 1,
+                                        cursor: 'pointer',
+                                        '&:hover': { color: '#ffff7f' },
+                                        transition: 'color 0.3s'
+                                    }}
+                                >
+                                    About
+                                </Typography>
+                                <Typography
+                                    color="rgba(255,255,255,0.8)"
+                                    sx={{
+                                        mb: 1,
+                                        cursor: 'pointer',
+                                        '&:hover': { color: '#ffff7f' },
+                                        transition: 'color 0.3s'
+                                    }}
+                                >
+                                    Blog
+                                </Typography>
+                                <Typography
+                                    color="rgba(255,255,255,0.8)"
+                                    sx={{
+                                        cursor: 'pointer',
+                                        '&:hover': { color: '#ffff7f' },
+                                        transition: 'color 0.3s'
+                                    }}
+                                >
+                                    Careers
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={12} md={4}>
+                                <Typography sx={{ fontWeight: 700, mb: 2 }}>Stay Updated</Typography>
+                                <Typography color="rgba(255,255,255,0.8)">
+                                    Subscribe to our newsletter for fitness tips and updates
+                                </Typography>
+                            </Grid>
+                        </Grid>
+                        <Box
                             sx={{
-                                bgcolor: 'rgba(255, 255, 127, 0.75)',
-                                color: '#1F2937',
-                                px: 6,
-                                py: 2,
-                                fontSize: '1.3rem',
-                                fontWeight: 700,
-                                boxShadow: '0 8px 32px rgba(255,217,61,0.4)',
-                                '&:hover': { bgcolor: 'rgba(255, 255, 127, 0.75)' },
+                                textAlign: 'center',
+                                mt: 4,
+                                pt: 4,
+                                borderTop: '1px solid rgba(255,255,255,0.18)'
                             }}
                         >
-                            Start Your Free Trial
-                        </Button>
-                    </motion.div>
-                </Container>
-            </Box>
-
-            <Box sx={{ bgcolor: '#1F2937', color: 'white', py: 6 }}>
-                <Container maxWidth="lg">
-                    <Grid container spacing={4}>
-                        <Grid item xs={12} md={4}>
-                            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                                <FitnessCenter sx={{ fontSize: 32, color: '#ffff7f  ', mr: 1 }} />
-                                <Typography variant="h6" sx={{ fontWeight: 800 }}>
-                                    FitTrack
-                                </Typography>
-                            </Box>
-                            <Typography color="rgba(255,255,255,0.7)">
-                                Your ultimate fitness tracking companion
+                            <Typography color="rgba(255,255,255,0.6)">
+                                © 2026 FitTrack. All rights reserved.
                             </Typography>
-                        </Grid>
-                        <Grid item xs={6} md={2}>
-                            <Typography sx={{ fontWeight: 700, mb: 2 }}>Product</Typography>
-                            <Typography color="rgba(255,255,255,0.7)" sx={{ mb: 1 }}>Features</Typography>
-                            <Typography color="rgba(255,255,255,0.7)" sx={{ mb: 1 }}>Pricing</Typography>
-                            <Typography color="rgba(255,255,255,0.7)">Support</Typography>
-                        </Grid>
-                        <Grid item xs={6} md={2}>
-                            <Typography sx={{ fontWeight: 700, mb: 2 }}>Company</Typography>
-                            <Typography color="rgba(255,255,255,0.7)" sx={{ mb: 1 }}>About</Typography>
-                            <Typography color="rgba(255,255,255,0.7)" sx={{ mb: 1 }}>Blog</Typography>
-                            <Typography color="rgba(255,255,255,0.7)">Careers</Typography>
-                        </Grid>
-                        <Grid item xs={12} md={4}>
-                            <Typography sx={{ fontWeight: 700, mb: 2 }}>Stay Updated</Typography>
-                            <Typography color="rgba(255,255,255,0.7)">
-                                Subscribe to our newsletter for fitness tips and updates
-                            </Typography>
-                        </Grid>
-                    </Grid>
-                    <Box sx={{ textAlign: 'center', mt: 4, pt: 4, borderTop: '1px solid rgba(255,255,255,0.1)' }}>
-                        <Typography color="rgba(255,255,255,0.5)">
-                            © 2026 FitTrack. All rights reserved.
-                        </Typography>
-                    </Box>
-                </Container>
+                        </Box>
+                    </Container>
+                </Box>
             </Box>
         </Box>
     );

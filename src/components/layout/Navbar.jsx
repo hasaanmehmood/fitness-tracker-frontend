@@ -73,7 +73,7 @@ const Navbar = () => {
                         sx={{
                             fontSize: 28,
                             mr: 1.5,
-                            color: '#22D3EE', // cyan accent
+                            color: 'yellow', // cyan accent
                         }}
                     />
                     <Typography
@@ -97,7 +97,7 @@ const Navbar = () => {
                         startIcon={<Dashboard />}
                         onClick={() => navigate('/dashboard')}
                         sx={{
-                            color: '#E5E7EB',
+                            color: 'grey',
                             fontWeight: 500,
                             textTransform: 'none',
                             px: 2,
